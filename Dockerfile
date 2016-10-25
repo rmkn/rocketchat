@@ -11,10 +11,10 @@ RUN yum -y install nodejs curl GraphicsMagick npm mongodb-org util-linux-ng
 RUN npm install -g inherits
 
 RUN curl -L https://rocket.chat/releases/latest/download -o /tmp/rocket.chat.tgz \
-        && tar zxf /tmp/rocket.chat.tgz -C /opt \
-	&& mv /opt/bundle /opt/Rocket.Chat
+        && tar zxf /tmp/rocket.chat.tgz -C /usr/local \
+	&& mv /usr/local/bundle /usr/local/Rocket.Chat
 
-WORKDIR /opt/Rocket.Chat/programs/server
+WORKDIR /usr/local/Rocket.Chat/programs/server
 RUN npm install
 
 ENV PORT 80
@@ -26,7 +26,7 @@ COPY entrypoint.sh /
 VOLUME /data/db
 EXPOSE 80
 
-CMD ["node", "/opt/Rocket.Chat/main.js"]
+CMD ["node", "/usr/local/Rocket.Chat/main.js"]
 
 ENTRYPOINT ["/entrypoint.sh"]
 

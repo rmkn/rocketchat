@@ -28,7 +28,7 @@ ENV MONGO_URL mongodb://localhost:27017/rocketchat
 COPY entrypoint.sh /
 
 #VOLUME /data/db
-RUN mkdir /data/db && chmod 777 /data/db
+RUN mkdir -p /data/db && chmod 777 /data/db
 EXPOSE 80
 
 CMD ["node", "/usr/local/Rocket.Chat/main.js"]

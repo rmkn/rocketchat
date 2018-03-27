@@ -1,5 +1,5 @@
 #!/bin/sh
 
-service mongod start
+/usr/bin/mongod &
 
 exec "$@"

@@ -1,21 +1,25 @@
-FROM centos:6
+FROM centos:7
 MAINTAINER rmkn
-RUN localedef -f UTF-8 -i ja_JP ja_JP.utf8 && sed -i -e "s/en_US.UTF-8/ja_JP.UTF-8/" /etc/sysconfig/i18n
-RUN cp -p /usr/share/zoneinfo/Japan /etc/localtime && echo 'ZONE="Asia/Tokyo"' > /etc/sysconfig/clock
+RUN sed -i -e "s/en_US.UTF-8/ja_JP.UTF-8/" /etc/locale.conf
+RUN ln -sf /usr/share/zoneinfo/Japan /etc/localtime 
 RUN yum -y update
+RUN localedef -v -c -i ja_JP -f UTF-8 ja_JP.UTF-8; echo ""
 
-RUN curl -o /tmp/node.sh --location https://rpm.nodesource.com/setup_4.x && sh /tmp/node.sh
+RUN yum -y install epel-release && yum -y update
 COPY mongodb.repo /etc/yum.repos.d/
 
-RUN yum -y install nodejs curl GraphicsMagick npm mongodb-org util-linux-ng
-RUN npm install -g inherits
+RUN yum install -y nodejs curl GraphicsMagick npm mongodb-org-server mongodb-org gcc-c++ which make
+RUN npm install -g inherits n
+RUN n 8.9.3
 
-RUN curl -L https://rocket.chat/releases/latest/download -o /tmp/rocket.chat.tgz \
+RUN curl -SL https://releases.rocket.chat/latest/download -o /tmp/rocket.chat.tgz \
         && tar zxf /tmp/rocket.chat.tgz -C /usr/local \
 	&& mv /usr/local/bundle /usr/local/Rocket.Chat
 
 WORKDIR /usr/local/Rocket.Chat/programs/server
 RUN npm install
+WORKDIR /usr/local/Rocket.Chat/programs/server/npm/node_modules
+RUN npm rebuild sharp
 
 ENV PORT 80
 ENV ROOT_URL http://localhost/

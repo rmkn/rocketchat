@@ -27,7 +27,7 @@ ENV MONGO_URL mongodb://localhost:27017/rocketchat
 
 COPY entrypoint.sh /
 
-VOLUME /data/db
+#VOLUME /data/db
 EXPOSE 80
 
 CMD ["node", "/usr/local/Rocket.Chat/main.js"]
